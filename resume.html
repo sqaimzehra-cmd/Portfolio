@@ -54,16 +54,34 @@
         <div class="container footer-grid">
             <div>
                 <h3>Qaim Zehra</h3>
-                <p class="small">Senior Designer</p>
+                <p class="small">Senior Designer — Clean modern branding & campaign visuals.</p>
+                <p class="small">Email: <a href="mailto:hello@example.com">hello@example.com</a></p>
+                <form name="newsletter" method="POST" data-netlify="true"
+                    style="margin-top:16px; display:flex; gap:8px">
+                    <input name="email" type="email" placeholder="Newsletter"
+                        style="height:38px; font-size:12px; padding:0 12px; flex:1" required />
+                    <button class="btn" type="submit"
+                        style="height:38px; padding:0 14px; border-color:var(--teal); color:var(--teal); background:transparent">Join</button>
+                </form>
             </div>
             <div>
                 <h3>Links</h3>
                 <p class="small"><a href="work.html">Work</a></p>
+                <p class="small"><a href="services.html">Services</a></p>
+                <p class="small"><a href="about.html">About</a></p>
+                <p class="small"><a href="resume.html">Resume</a></p>
+                <p class="small"><a href="contact.html">Contact</a></p>
             </div>
             <div>
                 <h3>Social</h3>
-                <p class="small"><a href="#">Behance</a></p>
+                <p class="small"><a href="https://www.behance.net/gallery/216474829/PORTFOLIO" target="_blank"
+                        rel="noreferrer">Behance</a></p>
+                <p class="small"><a href="https://www.linkedin.com/in/syeda-qaim/" target="_blank"
+                        rel="noreferrer">LinkedIn</a></p>
             </div>
+        </div>
+        <div class="container" style="padding-top:18px">
+            <div class="small">© <span id="year"></span> Qaim Zehra</div>
         </div>
     </footer>
     <script src="assets/js/app.js"></script>

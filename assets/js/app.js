@@ -6,44 +6,50 @@
 // - basic page transition on internal links
 
 (function () {
-    const nav = document.querySelector(".nav");
-    const onScroll = () => {
-        if (!nav) return;
-        nav.classList.toggle("is-scrolled", window.scrollY > 6);
-    };
-    window.addEventListener("scroll", onScroll, { passive: true });
-    onScroll();
+  const nav = document.querySelector(".nav");
+  const onScroll = () => {
+    if (!nav) return;
+    nav.classList.toggle("is-scrolled", window.scrollY > 6);
+  };
+  window.addEventListener("scroll", onScroll, { passive: true });
+  onScroll();
 
-    // Reveal on scroll
-    const revealEls = Array.from(document.querySelectorAll(".reveal"));
-    const io = new IntersectionObserver(
-        (entries) => {
-            entries.forEach((e) => {
-                if (e.isIntersecting) e.target.classList.add("is-in");
-            });
-        },
-        { threshold: 0.12 }
-    );
-    revealEls.forEach((el) => io.observe(el));
+  // Set current year in footer
+  const yearSpan = document.getElementById("year");
+  if (yearSpan) {
+    yearSpan.textContent = new Date().getFullYear();
+  }
 
-    // Smooth page transition (internal links)
-    document.addEventListener("click", (e) => {
-        const a = e.target.closest("a");
-        if (!a) return;
-        const href = a.getAttribute("href");
-        if (!href || href.startsWith("http") || href.startsWith("#") || href.startsWith("mailto:") || href.startsWith("tel:")) return;
-        // Same-origin navigation only
-        e.preventDefault();
-        document.body.style.opacity = "0";
-        document.body.style.transition = "opacity 220ms ease";
-        setTimeout(() => (window.location.href = href), 180);
-    });
+  // Reveal on scroll
+  const revealEls = Array.from(document.querySelectorAll(".reveal"));
+  const io = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((e) => {
+        if (e.isIntersecting) e.target.classList.add("is-in");
+      });
+    },
+    { threshold: 0.12 }
+  );
+  revealEls.forEach((el) => io.observe(el));
 
-    // Render projects if containers exist
-    function projectCard(p) {
-        const tags = (p.tags || []).map(t => `<span class="tag">${t}</span>`).join("");
-        const tools = (p.tools || []).slice(0, 2).join(" · ");
-        return `
+  // Smooth page transition (internal links)
+  document.addEventListener("click", (e) => {
+    const a = e.target.closest("a");
+    if (!a) return;
+    const href = a.getAttribute("href");
+    if (!href || href.startsWith("http") || href.startsWith("#") || href.startsWith("mailto:") || href.startsWith("tel:")) return;
+    // Same-origin navigation only
+    e.preventDefault();
+    document.body.style.opacity = "0";
+    document.body.style.transition = "opacity 220ms ease";
+    setTimeout(() => (window.location.href = href), 180);
+  });
+
+  // Render projects if containers exist
+  function projectCard(p) {
+    const tags = (p.tags || []).map(t => `<span class="tag">${t}</span>`).join("");
+    const tools = (p.tools || []).slice(0, 2).join(" · ");
+    return `
       <a class="card" href="project.html?id=${encodeURIComponent(p.id)}" aria-label="Open ${p.title}">
         <div class="card-media"></div>
         <div class="card-body">
@@ -57,67 +63,111 @@
         </div>
       </a>
     `;
-    }
+  }
 
-    const homeGrid = document.querySelector("[data-projects='home']");
-    const workGrid = document.querySelector("[data-projects='work']");
-    const filterWrap = document.querySelector("[data-filters]");
-    const searchInput = document.querySelector("[data-search]");
+  const homeGrid = document.querySelector("[data-projects='home']");
+  const workGrid = document.querySelector("[data-projects='work']");
+  const filterWrap = document.querySelector("[data-filters]");
+  const searchInput = document.querySelector("[data-search]");
 
-    const projects = window.PROJECTS || [];
+  const projects = window.PROJECTS || [];
 
-    if (homeGrid) {
-        homeGrid.innerHTML = projects.slice(0, 6).map(projectCard).join("");
-    }
+  if (homeGrid) {
+    homeGrid.innerHTML = projects.slice(0, 6).map(projectCard).join("");
+  }
 
-    let activeTag = "All";
-    let query = "";
+  let activeTag = "All";
+  let query = "";
 
-    function applyFilter() {
-        if (!workGrid) return;
-        const q = query.trim().toLowerCase();
-        const filtered = projects.filter((p) => {
-            const matchesTag =
-                activeTag === "All" ||
-                (p.tags || []).some((t) => t.toLowerCase() === activeTag.toLowerCase());
-            const blob = `${p.title} ${(p.tags || []).join(" ")} ${p.excerpt || ""}`.toLowerCase();
-            const matchesQuery = !q || blob.includes(q);
-            return matchesTag && matchesQuery;
+  function applyFilter() {
+    if (!workGrid) return;
+    const q = query.trim().toLowerCase();
+    const filtered = projects.filter((p) => {
+      const matchesTag =
+        activeTag === "All" ||
+        (p.tags || []).some((t) => t.toLowerCase() === activeTag.toLowerCase());
+      const blob = `${p.title} ${(p.tags || []).join(" ")} ${p.excerpt || ""}`.toLowerCase();
+      const matchesQuery = !q || blob.includes(q);
+      return matchesTag && matchesQuery;
+    });
+    workGrid.innerHTML = filtered.map(projectCard).join("");
+  }
+
+  if (filterWrap) {
+    filterWrap.addEventListener("click", (e) => {
+      const chip = e.target.closest(".chip");
+      if (!chip) return;
+      activeTag = chip.dataset.tag || "All";
+      filterWrap.querySelectorAll(".chip").forEach((c) => c.classList.remove("active"));
+      chip.classList.add("active");
+      applyFilter();
+    });
+  }
+
+  if (searchInput) {
+    searchInput.addEventListener("input", (e) => {
+      query = e.target.value || "";
+      applyFilter();
+    });
+  }
+
+  if (workGrid) applyFilter();
+
+  // Generic Netlify Form Handling
+  document.querySelectorAll('form[data-netlify="true"]').forEach(form => {
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const btn = form.querySelector('button[type="submit"]');
+      if (!btn) return;
+
+      const originalBtnHTML = btn.innerHTML;
+      btn.disabled = true;
+      btn.innerHTML = 'Sending...';
+
+      const formData = new FormData(form);
+      const isFileUpload = form.querySelector('input[type="file"]');
+      const hasFile = isFileUpload && isFileUpload.files.length > 0;
+
+      const fetchOptions = {
+        method: "POST",
+        body: hasFile ? formData : new URLSearchParams(formData).toString()
+      };
+
+      if (!hasFile) {
+        fetchOptions.headers = { "Content-Type": "application/x-www-form-urlencoded" };
+      }
+
+      fetch("/", fetchOptions)
+        .then(() => {
+          if (form.name === 'newsletter') {
+            form.innerHTML = '<div style="color:var(--teal); font-size:12px; padding:10px 0;">Subscribed! ✨</div>';
+          } else {
+            const actionArea = document.getElementById("form-action-area");
+            if (actionArea) {
+              actionArea.innerHTML = '<div style="color:var(--teal); font-weight:600; padding:10px 0;">Message sent successfully! ✨</div>';
+            }
+            form.reset();
+          }
+        })
+        .catch(error => {
+          alert('Error: ' + error);
+          btn.disabled = false;
+          btn.innerHTML = originalBtnHTML;
         });
-        workGrid.innerHTML = filtered.map(projectCard).join("");
-    }
+    });
+  });
 
-    if (filterWrap) {
-        filterWrap.addEventListener("click", (e) => {
-            const chip = e.target.closest(".chip");
-            if (!chip) return;
-            activeTag = chip.dataset.tag || "All";
-            filterWrap.querySelectorAll(".chip").forEach((c) => c.classList.remove("active"));
-            chip.classList.add("active");
-            applyFilter();
-        });
-    }
+  // Project detail render
+  const detail = document.querySelector("[data-project-detail]");
+  if (detail) {
+    const params = new URLSearchParams(location.search);
+    const id = params.get("id");
+    const p = projects.find((x) => x.id === id) || projects[0];
 
-    if (searchInput) {
-        searchInput.addEventListener("input", (e) => {
-            query = e.target.value || "";
-            applyFilter();
-        });
-    }
+    const tagHTML = (p.tags || []).map(t => `<span class="tag">${t}</span>`).join("");
+    const toolHTML = (p.tools || []).map(t => `<span class="tag">${t}</span>`).join("");
 
-    if (workGrid) applyFilter();
-
-    // Project detail render
-    const detail = document.querySelector("[data-project-detail]");
-    if (detail) {
-        const params = new URLSearchParams(location.search);
-        const id = params.get("id");
-        const p = projects.find((x) => x.id === id) || projects[0];
-
-        const tagHTML = (p.tags || []).map(t => `<span class="tag">${t}</span>`).join("");
-        const toolHTML = (p.tools || []).map(t => `<span class="tag">${t}</span>`).join("");
-
-        detail.innerHTML = `
+    detail.innerHTML = `
       <div class="reveal">
         <div class="card" style="border-radius:24px">
           <div class="card-media" style="height:520px"></div>
@@ -216,7 +266,7 @@
         </div>
       </div>
     `;
-        // trigger reveal observer
-        document.querySelectorAll(".reveal").forEach(el => el.classList.add("is-in"));
-    }
+    // trigger reveal observer
+    document.querySelectorAll(".reveal").forEach(el => el.classList.add("is-in"));
+  }
 })();
