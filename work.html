@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Work — Qaim Zehra</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="assets/css/style.css" />
+</head>
+
+<body class="page">
+    <header class="nav">
+        <div class="container nav-inner">
+            <a class="brand" href="index.html">
+                <div class="brand-mark">QZ</div>
+                <div class="brand-text"><b>Qaim Zehra</b><span>Senior Designer</span></div>
+            </a>
+            <nav class="nav-links">
+                <a href="index.html">Home</a>
+                <a class="active" href="work.html">Work</a>
+                <a href="services.html">Services</a>
+                <a href="about.html">About</a>
+                <a href="contact.html">Contact</a>
+            </nav>
+            <div class="nav-actions">
+                <a class="btn btn-primary" href="contact.html">Let’s work <span class="icon">→</span></a>
+            </div>
+        </div>
+    </header>
+
+    <main class="section">
+        <div class="container">
+            <div class="reveal">
+                <div class="kicker">Portfolio</div>
+                <h1 style="font-size:72px; line-height:1.05">Work</h1>
+                <p style="max-width:720px">Brand identity, packaging, and campaign visuals. Filter by category or search
+                    by keyword.</p>
+            </div>
+
+            <div class="reveal"
+                style="margin-top:22px; display:flex; gap:12px; justify-content:space-between; align-items:center; flex-wrap:wrap">
+                <div class="chips" data-filters>
+                    <button class="chip active" data-tag="All">All</button>
+                    <button class="chip" data-tag="Branding">Branding</button>
+                    <button class="chip" data-tag="Packaging">Packaging</button>
+                    <button class="chip" data-tag="Campaign">Campaign</button>
+                    <button class="chip" data-tag="Social">Social</button>
+                    <button class="chip" data-tag="Identity">Identity</button>
+                    <button class="chip" data-tag="Print">Print</button>
+                </div>
+
+                <div style="min-width:260px; flex:1; max-width:360px">
+                    <input data-search placeholder="Search projects (e.g., honey, scent, cosmetics)" />
+                </div>
+            </div>
+
+            <div class="grid reveal" style="margin-top:26px" data-projects="work"></div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container footer-grid">
+            <div>
+                <h3>Qaim Zehra</h3>
+                <p class="small">Senior Designer — clean modern portfolios with premium detail.</p>
+            </div>
+            <div>
+                <h3>Links</h3>
+                <p class="small"><a href="services.html">Services</a></p>
+                <p class="small"><a href="about.html">About</a></p>
+                <p class="small"><a href="contact.html">Contact</a></p>
+            </div>
+            <div>
+                <h3>Social</h3>
+                <p class="small"><a href="#" target="_blank" rel="noreferrer">Behance</a></p>
+                <p class="small"><a href="#" target="_blank" rel="noreferrer">Instagram</a></p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="assets/js/projects.js"></script>
+    <script src="assets/js/app.js"></script>
+</body>
+
+</html>
