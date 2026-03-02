@@ -1,4 +1,4 @@
-// Qaim Zehra Portfolio JS
+// Syeda Qaim Portfolio JS
 // - sticky navbar blur on scroll
 // - reveal on scroll
 // - project rendering (home/work)
