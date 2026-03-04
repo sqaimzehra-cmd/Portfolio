@@ -7,6 +7,7 @@
 
 (function () {
   const nav = document.querySelector(".nav");
+
   const onScroll = () => {
     if (!nav) return;
     nav.classList.toggle("is-scrolled", window.scrollY > 6);
@@ -40,19 +41,6 @@
     { threshold: 0.12 }
   );
   revealEls.forEach((el) => io.observe(el));
-
-  // Smooth page transition (internal links)
-  document.addEventListener("click", (e) => {
-    const a = e.target.closest("a");
-    if (!a) return;
-    const href = a.getAttribute("href");
-    if (!href || href.startsWith("http") || href.startsWith("#") || href.startsWith("mailto:") || href.startsWith("tel:")) return;
-    // Same-origin navigation only
-    e.preventDefault();
-    document.body.style.opacity = "0";
-    document.body.style.transition = "opacity 220ms ease";
-    setTimeout(() => (window.location.href = href), 180);
-  });
 
   // Render projects if containers exist
   function projectCard(p) {
