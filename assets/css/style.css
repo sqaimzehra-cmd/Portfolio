@@ -327,6 +327,24 @@ a {
   margin-top: 18px
 }
 
+.home-page .hero .hero-actions .btn {
+  opacity: 0;
+  transform: translateY(10px) scale(0.985);
+  animation: cta-pop 0.7s var(--ease) forwards;
+}
+
+.home-page .hero .hero-actions .btn:nth-child(1) {
+  animation-delay: 0.66s;
+}
+
+.home-page .hero .hero-actions .btn:nth-child(2) {
+  animation-delay: 0.78s;
+}
+
+.home-page .hero .hero-actions .btn:nth-child(3) {
+  animation-delay: 0.9s;
+}
+
 .hero-note {
   margin-top: 14px;
   font-size: 14px;
@@ -467,18 +485,48 @@ a {
 }
 
 .card {
+  --card-tilt-x: 0deg;
+  --card-tilt-y: 0deg;
+  --card-lift: 0px;
   background: linear-gradient(180deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0.02));
   border: 1px solid var(--border);
   border-radius: var(--radius);
   overflow: hidden;
   position: relative;
-  transition: transform 280ms var(--ease), background 280ms var(--ease), border 280ms var(--ease);
+  transform: translateY(var(--card-lift)) rotateX(var(--card-tilt-x)) rotateY(var(--card-tilt-y));
+  transform-style: preserve-3d;
+  transition: transform 280ms var(--ease), background 280ms var(--ease), border 280ms var(--ease), box-shadow 280ms var(--ease);
 }
 
 .card:hover {
-  transform: translateY(-6px);
+  --card-lift: -6px;
   background: rgba(255, 255, 255, 0.04);
-  border-color: rgba(34, 211, 238, 0.18)
+  border-color: rgba(34, 211, 238, 0.18);
+  box-shadow: 0 14px 38px rgba(2, 13, 25, 0.42);
+}
+
+.project-card {
+  opacity: 0;
+  transform: translateY(24px) scale(0.985);
+}
+
+.project-card.is-mounted {
+  animation: card-enter 720ms var(--ease) forwards;
+  animation-delay: var(--card-delay, 0ms);
+}
+
+.project-card .card-media::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(110deg, transparent 25%, rgba(34, 211, 238, 0.16) 50%, transparent 75%);
+  transform: translateX(-120%);
+  transition: transform 650ms var(--ease);
+  pointer-events: none;
+}
+
+.project-card:hover .card-media::before {
+  transform: translateX(120%);
 }
 
 .card-media {
@@ -764,6 +812,13 @@ select:focus {
   }
 }
 
+@keyframes cta-pop {
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
 @keyframes home-title {
   0% {
     opacity: 0;
@@ -827,19 +882,42 @@ select:focus {
   }
 }
 
+@keyframes card-enter {
+  0% {
+    opacity: 0;
+    transform: translateY(24px) scale(0.985);
+  }
+
+  65% {
+    opacity: 1;
+    transform: translateY(-2px) scale(1.003);
+  }
+
+  100% {
+    opacity: 1;
+    transform: none;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
+
   .home-page .hero::after,
   .home-page .hero .kicker,
   .home-page .hero h1,
   .home-page .hero .role,
   .home-page .hero .hero-actions,
+  .home-page .hero .hero-actions .btn,
   .home-page .hero .hero-note,
   .home-page .hero .reveal>p:first-of-type,
   .home-page .hero .avatar-wrap,
-  .home-page .hero .avatar-platform {
+  .home-page .hero .avatar-platform,
+  .project-card,
+  .project-card.is-mounted,
+  .dropping-track {
     animation: none !important;
     opacity: 1 !important;
     transform: none !important;
+    filter: none !important;
   }
 }
 
@@ -879,7 +957,7 @@ select:focus {
   align-items: center;
   color: var(--text);
   font-family: 'Space Grotesk', sans-serif;
-  font-size: 96px;
+  font-size: clamp(72px, 8vw, 124px);
   font-weight: 700;
   letter-spacing: -0.04em;
   overflow: hidden;
@@ -888,6 +966,14 @@ select:focus {
   background: var(--surface);
   border: 1px solid var(--border);
   box-shadow: var(--shadow);
+}
+
+.creative-banner>div {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  flex-wrap: wrap;
 }
 
 /* Animated Glow Background */
@@ -913,124 +999,60 @@ select:focus {
 }
 
 .dropping-texts {
-  display: inline-block;
-  width: 680px;
-  text-align: left;
-  height: 120px;
-  vertical-align: -18px;
-  margin-left: 20px;
+  display: inline-flex;
+  width: max-content;
+  min-width: 8ch;
+  height: 1.1em;
+  line-height: 1.1;
+  vertical-align: baseline;
+  margin-left: 0;
   position: relative;
+  justify-content: flex-start;
+  align-items: flex-start;
+  text-align: left;
   color: var(--teal);
+  overflow: hidden;
 }
 
-.dropping-texts>div {
-  font-size: 0px;
-  opacity: 0;
-  margin-left: -30px;
-  position: absolute;
+.dropping-track {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  animation: identity-track 9s var(--ease) infinite;
+  will-change: transform;
+}
+
+.dropping-track>div {
+  width: 100%;
+  height: 1.1em;
+  line-height: 1.1em;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
   font-weight: 700;
   text-shadow: 0px 0px 30px rgba(34, 211, 238, 0.3);
   white-space: nowrap;
-  will-change: auto;
 }
 
-.dropping-texts>div:nth-child(1) {
-  animation: roll 6s linear infinite 0s;
-}
+@keyframes identity-track {
 
-.dropping-texts>div:nth-child(2) {
-  animation: roll 6s linear infinite 1.5s;
-}
-
-.dropping-texts>div:nth-child(3) {
-  animation: roll 6s linear infinite 3s;
-}
-
-.dropping-texts>div:nth-child(4) {
-  animation: roll2 6s linear infinite 4.5s;
-}
-
-@keyframes roll {
-  0% {
-    font-size: 0px;
-    opacity: 0;
-    margin-left: -20px;
-    margin-top: -10px;
-    transform: rotate(-5deg);
+  0%,
+  24% {
+    transform: translateY(0);
   }
 
-  5% {
-    opacity: 1;
-    transform: rotate(0deg);
+  33%,
+  57% {
+    transform: translateY(-1.1em);
   }
 
-  8% {
-    font-size: inherit;
-    opacity: 1;
-    margin-left: 0px;
-    margin-top: 0px;
-  }
-
-  25% {
-    font-size: inherit;
-    opacity: 1;
-    margin-left: 0px;
-    margin-top: 0px;
-    transform: rotate(0deg);
-  }
-
-  30% {
-    font-size: 0px;
-    opacity: 0;
-    margin-left: 10px;
-    margin-top: 50px;
+  66%,
+  90% {
+    transform: translateY(-2.2em);
   }
 
   100% {
-    font-size: 0px;
-    opacity: 0;
-  }
-}
-
-@keyframes roll2 {
-  0% {
-    font-size: 0px;
-    opacity: 0;
-    margin-left: -20px;
-    margin-top: -10px;
-    transform: rotate(-5deg);
-  }
-
-  5% {
-    opacity: 1;
-    transform: rotate(0deg);
-  }
-
-  8% {
-    font-size: inherit;
-    opacity: 1;
-    margin-left: 0px;
-    margin-top: 0px;
-  }
-
-  35% {
-    font-size: inherit;
-    opacity: 1;
-    margin-left: 0px;
-    margin-top: 0px;
-    transform: rotate(0deg);
-  }
-
-  42% {
-    font-size: 500px;
-    opacity: 0;
-    margin-left: -200px;
-    margin-top: -150px;
-  }
-
-  100% {
-    font-size: 0px;
-    opacity: 0;
+    transform: translateY(-3.3em);
   }
 }
 
@@ -1047,37 +1069,24 @@ select:focus {
 @media (max-width: 920px) {
   .creative-banner {
     min-height: 50vh;
-    font-size: 42px;
+    font-size: clamp(42px, 7.2vw, 62px);
     border-radius: 24px;
     padding: 24px;
     margin: 40px var(--gutter);
   }
 
-  .creative-banner>div {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 12px;
-  }
-
   .dropping-texts {
     width: 100%;
-    height: 60px;
+    height: 1.2em;
     text-align: center;
     margin-left: 0;
     vertical-align: baseline;
-  }
-
-  .dropping-texts>div {
-    left: 0;
-    right: 0;
-    margin-left: 0;
   }
 }
 
 @media (max-width: 600px) {
   .creative-banner {
-    font-size: 32px;
+    font-size: clamp(34px, 8.8vw, 46px);
     min-height: 40vh;
   }
 
@@ -1597,17 +1606,14 @@ select:focus {
   max-height: 560px;
   object-fit: contain;
   filter:
-    drop-shadow(0 40px 80px rgba(0, 0, 0, 0.6))
-    drop-shadow(0 12px 34px rgba(34, 211, 238, 0.18));
+    drop-shadow(0 40px 80px rgba(0, 0, 0, 0.6)) drop-shadow(0 12px 34px rgba(34, 211, 238, 0.18));
   transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .avatar-img:hover {
   transform: scale(1.03) translateZ(40px);
   filter:
-    drop-shadow(0 60px 100px rgba(0, 0, 0, 0.8))
-    drop-shadow(0 18px 40px rgba(34, 211, 238, 0.26))
-    brightness(1.05);
+    drop-shadow(0 60px 100px rgba(0, 0, 0, 0.8)) drop-shadow(0 18px 40px rgba(34, 211, 238, 0.26)) brightness(1.05);
 }
 
 .avatar-platform {

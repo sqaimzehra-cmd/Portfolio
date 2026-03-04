@@ -6,6 +6,8 @@
 // - basic page transition on internal links
 
 (function () {
+  const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const canHover = window.matchMedia("(hover: hover)").matches;
   const nav = document.querySelector(".nav");
 
   const onScroll = () => {
@@ -47,7 +49,7 @@
     const tags = (p.tags || []).map(t => `<span class="tag">${t}</span>`).join("");
     const tools = (p.tools || []).slice(0, 2).join(" · ");
     return `
-      <a class="card" href="project.html?id=${encodeURIComponent(p.id)}" aria-label="Open ${p.title}">
+      <a class="card project-card" href="project.html?id=${encodeURIComponent(p.id)}" aria-label="Open ${p.title}">
         <div class="card-media"></div>
         <div class="card-body">
           <div class="card-title">${p.title}</div>
@@ -62,6 +64,37 @@
     `;
   }
 
+  function wireProjectCardTilt(card) {
+    if (!canHover || prefersReducedMotion || card.dataset.tiltBound === "1") return;
+    card.dataset.tiltBound = "1";
+
+    card.addEventListener("mousemove", (e) => {
+      const r = card.getBoundingClientRect();
+      const x = (e.clientX - r.left) / r.width;
+      const y = (e.clientY - r.top) / r.height;
+      const tiltX = (0.5 - y) * 4;
+      const tiltY = (x - 0.5) * 5;
+      card.style.setProperty("--card-tilt-x", `${tiltX.toFixed(2)}deg`);
+      card.style.setProperty("--card-tilt-y", `${tiltY.toFixed(2)}deg`);
+    });
+
+    card.addEventListener("mouseleave", () => {
+      card.style.setProperty("--card-tilt-x", "0deg");
+      card.style.setProperty("--card-tilt-y", "0deg");
+    });
+  }
+
+  function mountProjectCards(scope) {
+    const cards = Array.from(scope.querySelectorAll(".project-card"));
+    cards.forEach((card, i) => {
+      card.style.setProperty("--card-delay", `${Math.min(i, 11) * 70}ms`);
+      wireProjectCardTilt(card);
+    });
+    requestAnimationFrame(() => {
+      cards.forEach((card) => card.classList.add("is-mounted"));
+    });
+  }
+
   const homeGrid = document.querySelector("[data-projects='home']");
   const workGrid = document.querySelector("[data-projects='work']");
   const filterWrap = document.querySelector("[data-filters]");
@@ -71,6 +104,7 @@
 
   if (homeGrid) {
     homeGrid.innerHTML = projects.slice(0, 6).map(projectCard).join("");
+    mountProjectCards(homeGrid);
   }
 
   let activeTag = "All";
@@ -88,6 +122,7 @@
       return matchesTag && matchesQuery;
     });
     workGrid.innerHTML = filtered.map(projectCard).join("");
+    mountProjectCards(workGrid);
   }
 
   if (filterWrap) {
