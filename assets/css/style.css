@@ -758,12 +758,10 @@ a {
   transition: all 220ms var(--ease);
 }
 
-.tool-mark {
-  font-size: 14px;
-  font-weight: 600;
-  letter-spacing: 0.01em;
-  color: #d8e6ff;
-  opacity: 0.95;
+.tool-icon {
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
 }
 
 .tool:hover {
@@ -771,8 +769,8 @@ a {
   background: rgba(34, 211, 238, 0.08)
 }
 
-.tool:hover .tool-mark {
-  color: var(--teal)
+.tool:hover .tool-icon {
+  transform: scale(1.06);
 }
 
 @media (max-width: 920px) {
