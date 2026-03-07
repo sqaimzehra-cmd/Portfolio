@@ -5,6 +5,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Contact — Syeda Qaim</title>
+  <link rel="icon" type="image/png" href="assets/img/avatar.png" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
@@ -42,8 +43,8 @@
             <div class="split reveal" style="margin-top:26px">
                 <div class="card" style="padding:26px">
                     <h3 style="margin:0 0 10px">Direct</h3>
-                    <p><b style="color:var(--text)">Email:</b> hello@example.com</p>
-                    <p><b style="color:var(--text)">WhatsApp:</b> +00 000 000000</p>
+                    <p><b style="color:var(--text)">Email:</b> <a href="mailto:sqaimzehra@gmail.com">sqaimzehra@gmail.com</a></p>
+                    <p><b style="color:var(--text)">WhatsApp:</b> <a href="https://wa.me/923161689541" target="_blank" rel="noreferrer">+92 316 1689541</a></p>
                     <div class="hr"></div>
                     <p class="small">
                         <a href="https://www.behance.net/syedaqaim1" target="_blank" rel="noreferrer">Behance</a> /
@@ -51,7 +52,9 @@
                     </p>
                 </div>
 
-                <form class="card" name="contact" method="POST" data-netlify="true" style="padding:26px">
+                <form class="card" name="contact" method="POST" data-netlify="true" enctype="multipart/form-data"
+                    style="padding:26px">
+                    <input type="hidden" name="form-name" value="contact" />
                     <div class="field"><label class="small">Name</label><input name="name" required /></div>
                     <div class="field" style="margin-top:12px"><label class="small">Email</label><input name="email"
                             type="email" required /></div>
@@ -83,7 +86,7 @@
             <div>
                 <h3>Syeda Qaim</h3>
                 <p class="small">Senior Designer — Clean modern branding & campaign visuals.</p>
-                <p class="small">Email: <a href="mailto:hello@example.com">hello@example.com</a></p>
+                <p class="small">Email: <a href="mailto:sqaimzehra@gmail.com">sqaimzehra@gmail.com</a></p>
                 <form name="newsletter" method="POST" data-netlify="true"
                     style="margin-top:16px; display:flex; gap:8px">
                     <input name="email" type="email" placeholder="Newsletter"
@@ -116,3 +119,4 @@
 </body>
 
 </html>
+

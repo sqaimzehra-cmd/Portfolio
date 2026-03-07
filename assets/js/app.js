@@ -6,9 +6,34 @@
 // - basic page transition on internal links
 
 (function () {
+  const body = document.body;
   const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   const canHover = window.matchMedia("(hover: hover)").matches;
   const nav = document.querySelector(".nav");
+  const homeLoader = document.querySelector(".home-loader");
+
+  if (body && body.classList.contains("home-page") && homeLoader) {
+    const minLoaderMs = prefersReducedMotion ? 700 : 2200;
+    const finishHomeLoader = () => {
+      body.classList.remove("home-loading");
+      body.classList.add("home-loaded");
+      window.setTimeout(() => {
+        homeLoader.remove();
+      }, 800);
+    };
+
+    if (document.readyState === "complete") {
+      window.setTimeout(finishHomeLoader, minLoaderMs);
+    } else {
+      window.addEventListener(
+        "load",
+        () => {
+          window.setTimeout(finishHomeLoader, minLoaderMs);
+        },
+        { once: true }
+      );
+    }
+  }
 
   const onScroll = () => {
     if (!nav) return;
@@ -157,6 +182,9 @@
       btn.innerHTML = 'Sending...';
 
       const formData = new FormData(form);
+      if (form.name && !formData.has("form-name")) {
+        formData.append("form-name", form.name);
+      }
       const isFileUpload = form.querySelector('input[type="file"]');
       const hasFile = isFileUpload && isFileUpload.files.length > 0;
 
